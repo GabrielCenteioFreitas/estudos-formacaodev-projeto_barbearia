@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profissional {
+  id                   Int           @id @default(autoincrement())
+  nome                 String
+  descricao            String
+  imagemUrl            String
+  avaliacao            Float
+  quantidadeAvaliacoes Int
+  agendamentos         Agendamento[]
+
+  @@map("profissional")
+}
+
+model Servico {
+  id           Int           @id @default(autoincrement())
+  nome         String        @unique
+  descricao    String
+  preco        Float
+  qtdeSlots    Int
+  imagemURL    String
+  agendamentos Agendamento[]
+
+  @@map("servico")
+}
+
+model Agendamento {
+  id             Int          @id @default(autoincrement())
+  emailClient    String
+  data           DateTime
+  profissional   Profissional @relation(fields: [profissionalId], references: [id])
+  profissionalId Int
+  servicos       Servico[]
+}
